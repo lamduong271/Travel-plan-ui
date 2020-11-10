@@ -1,0 +1,6 @@
+query loginMe{
+  loginMe {
+    username
+    id
+  }
+}
