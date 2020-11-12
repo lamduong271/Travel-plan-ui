@@ -4,7 +4,7 @@ import { Formik, Form } from "formik";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "../components/InputField";
 import { useRouter } from 'next/router'
-import { useRegisterMutation } from "../generated/graphql";
+import { useRegisterUserMutation } from "../generated/graphql";
 import { toErrorMap } from "../untils/toErrorMap";
 
 interface registerProps {}
@@ -12,7 +12,7 @@ interface registerProps {}
 
 export const Register: React.FC<registerProps> = ({}) => {
   const router = useRouter()
-  const [, register] = useRegisterMutation();
+  const [, register] = useRegisterUserMutation();
   return (
     <Wrapper>
       <Formik

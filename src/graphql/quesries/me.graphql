@@ -1,6 +1,5 @@
 query loginMe{
   loginMe {
-    username
-    id
+    ...RegularUser
   }
 }

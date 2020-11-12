@@ -1,13 +1,12 @@
-mutation Login($username: String!, $password: String!){
+#RegularUser from fragment/RegularUser.graphql
+mutation login($username: String!, $password: String!){
   login(data: { username: $username, password: $password}) {
     error {
       field
       message
     }
     user {
-      username
-      id
-      password
+      ...RegularUser
     }
   }
 }
