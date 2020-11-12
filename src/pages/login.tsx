@@ -6,6 +6,8 @@ import { Formik, Form } from 'formik';
 import { toErrorMap } from '../untils/toErrorMap';
 import { InputField } from '../components/InputField';
 import { Button } from '@chakra-ui/core';
+import { withUrqlClient } from 'next-urql';
+import { createUrqlClient } from '../untils/createUrqlClient';
 
 interface loginProps {
 
@@ -54,4 +56,4 @@ export const Login: React.FC<loginProps> = ({}) => {
   );
 };
 
-export default Login;
+export default withUrqlClient(createUrqlClient)(Login);
