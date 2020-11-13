@@ -18,11 +18,11 @@ export const Register: React.FC<registerProps> = ({}) => {
   return (
     <Wrapper>
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{email: "", username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await register(values)
-          if(response.data?.registerUser.error) {
-            setErrors(toErrorMap(response.data.registerUser.error))
+          const response = await register({data: values})
+          if(response.data?.registerUser.errors) {
+            setErrors(toErrorMap(response.data.registerUser.errors))
           } else if(response.data?.registerUser.user) {
             router.push('/')
           }
@@ -34,6 +34,11 @@ export const Register: React.FC<registerProps> = ({}) => {
               name="username"
               placeholder="username"
               label="Username"
+            />
+            <InputField
+              name="email"
+              placeholder="email"
+              label="Email"
             />
             <InputField
               name="password"

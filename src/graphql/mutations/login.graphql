@@ -1,7 +1,7 @@
 #RegularUser from fragment/RegularUser.graphql
-mutation login($username: String!, $password: String!){
-  login(data: { username: $username, password: $password}) {
-    error {
+mutation login($usernameOrEmail: String!, $password: String!){
+  login(usernameOrEmail: $usernameOrEmail, password: $password) {
+    errors {
       field
       message
     }

@@ -1,6 +1,6 @@
-mutation registerUser($username: String!, $password: String!) {
-  registerUser(data: { username: $username, password: $password}) {
-    error {
+mutation registerUser($data: UsernamePasswordInput!) {
+  registerUser(data: $data) {
+    errors {
       field
       message
     }
