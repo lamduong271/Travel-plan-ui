@@ -1,0 +1,15 @@
+mutation createPlan( $destination: String!, $numberOfDay: Int!){
+  createPlan (
+      planData: {
+        destination: $destination,
+      	numberOfDay: $numberOfDay,
+      }
+  ) {
+    plan_id
+    destination
+    numberOfDay
+    plannerId
+    voteUp
+    voteDown
+  }
+}
