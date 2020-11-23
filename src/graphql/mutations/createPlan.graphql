@@ -1,10 +1,5 @@
-mutation createPlan( $destination: String!, $numberOfDay: Int!){
-  createPlan (
-      planData: {
-        destination: $destination,
-      	numberOfDay: $numberOfDay,
-      }
-  ) {
+mutation createPlan( $inputPlan: PlanInputType!){
+  createPlan (inputPlan: $inputPlan) {
     plan_id
     destination
     numberOfDay

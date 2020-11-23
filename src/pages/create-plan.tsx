@@ -1,24 +1,31 @@
 import { Button } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
 import { withUrqlClient } from 'next-urql';
-import React from 'react'
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react'
 import { InputField } from '../components/InputField';
 import { Wrapper } from '../components/Wrapper';
 import { useCreatePlanMutation } from '../generated/graphql';
 import { createUrqlClient } from '../untils/createUrqlClient';
+import { isAuthenticateHandler } from '../untils/isAuthenticateHandler';
 
 interface createPlanProps {
 
 }
 
 const CreatePlan: React.FC<createPlanProps> = ({}) => {
+  const router = useRouter();
+  isAuthenticateHandler()
   const [, createPlan] = useCreatePlanMutation()
     return (
       <Wrapper variant='small'>
       <Formik
         initialValues={{ destination: "", numberOfDay: 0 }}
         onSubmit={async (values) => {
-          await createPlan(values)
+          const {error} = await createPlan({inputPlan: values})
+           if(!error) {
+            router.push('/')
+          }
         }}
       >
         {({ isSubmitting }) => (

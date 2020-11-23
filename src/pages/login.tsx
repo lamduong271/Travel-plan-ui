@@ -9,6 +9,7 @@ import { Box, Button, Link } from '@chakra-ui/core';
 import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../untils/createUrqlClient';
 import NextLink from "next/link";
+import { type } from 'os';
 
 interface loginProps {
 
@@ -27,6 +28,11 @@ export const Login: React.FC<loginProps> = ({}) => {
             setErrors(toErrorMap(response.data.login.errors))
           } else if(response.data?.login.user) {
             router.push('/')
+            if(typeof router.query.next === 'string') {
+              router.push(router.query.next)
+            } else {
+              router.push("/")
+            }
           }
         }}
       >

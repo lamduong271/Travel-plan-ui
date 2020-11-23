@@ -29,7 +29,7 @@ export type Plan = {
   __typename?: 'Plan';
   plan_id: Scalars['Int'];
   destination: Scalars['String'];
-  numberOfDay: Scalars['Int'];
+  numberOfDay: Scalars['Float'];
   voteUp: Scalars['Float'];
   voteDown: Scalars['Float'];
   plannerId: Scalars['Float'];
@@ -63,7 +63,7 @@ export type Mutation = {
 
 
 export type MutationCreatePlanArgs = {
-  planData: PlanInputType;
+  inputPlan: PlanInputType;
 };
 
 
@@ -102,7 +102,7 @@ export type MutationChangePasswordArgs = {
 
 export type PlanInputType = {
   destination: Scalars['String'];
-  numberOfDay: Scalars['Int'];
+  numberOfDay: Scalars['Float'];
 };
 
 export type UsernamePasswordInput = {
@@ -161,8 +161,7 @@ export type ChangePasswordMutation = (
 );
 
 export type CreatePlanMutationVariables = Exact<{
-  destination: Scalars['String'];
-  numberOfDay: Scalars['Int'];
+  inputPlan: PlanInputType;
 }>;
 
 
@@ -265,8 +264,8 @@ export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
 };
 export const CreatePlanDocument = gql`
-    mutation createPlan($destination: String!, $numberOfDay: Int!) {
-  createPlan(planData: {destination: $destination, numberOfDay: $numberOfDay}) {
+    mutation createPlan($inputPlan: PlanInputType!) {
+  createPlan(inputPlan: $inputPlan) {
     plan_id
     destination
     numberOfDay
