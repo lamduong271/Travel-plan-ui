@@ -1,6 +1,6 @@
 mutation createPlan( $inputPlan: PlanInputType!){
   createPlan (inputPlan: $inputPlan) {
-    plan_id
+    id
     destination
     numberOfDay
     plannerId

@@ -1,0 +1,11 @@
+query getAllPlans($limit: Int!, $cursor:String) {
+  getAllPlans(limit: $limit, cursor:$cursor) {
+    hasMore,
+    plans {
+      createdAt
+      id
+      destination
+      numberOfDay
+    }
+  }
+}

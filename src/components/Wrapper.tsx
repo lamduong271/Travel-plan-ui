@@ -1,21 +1,22 @@
 import React from "react";
 import { Box } from "@chakra-ui/core";
-import { auto } from "@popperjs/core";
+
+export type WrapperVariant = "small" | "regular";
 
 interface WrapperProps {
-  variant?: "small" | "regular";
+  variant?: WrapperVariant;
 }
 
 export const Wrapper: React.FC<WrapperProps> = ({
   children,
-  variant = "regular"
+  variant = "regular",
 }) => {
   return (
     <Box
       mt={8}
-      m={"auto"}
+      mx="auto"
       maxW={variant === "regular" ? "800px" : "400px"}
-      w={"100%"}
+      w="100%"
     >
       {children}
     </Box>

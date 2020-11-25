@@ -15,19 +15,31 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
-  getAllPlans: Array<Plan>;
+  getAllPlans: PaginatedPlans;
   getPlanById: Plan;
   loginMe?: Maybe<User>;
 };
 
 
+export type QueryGetAllPlansArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
+
 export type QueryGetPlanByIdArgs = {
-  plan_id: Scalars['Int'];
+  id: Scalars['Int'];
+};
+
+export type PaginatedPlans = {
+  __typename?: 'PaginatedPlans';
+  plans: Array<Plan>;
+  hasMore: Scalars['Boolean'];
 };
 
 export type Plan = {
   __typename?: 'Plan';
-  plan_id: Scalars['Int'];
+  id: Scalars['Int'];
   destination: Scalars['String'];
   numberOfDay: Scalars['Float'];
   voteUp: Scalars['Float'];
@@ -70,12 +82,12 @@ export type MutationCreatePlanArgs = {
 export type MutationUpdatePlanArgs = {
   numberOfDay?: Maybe<Scalars['Int']>;
   destination?: Maybe<Scalars['String']>;
-  plan_id: Scalars['Int'];
+  id: Scalars['Int'];
 };
 
 
 export type MutationDeletePlanArgs = {
-  plan_id: Scalars['Int'];
+  id: Scalars['Int'];
 };
 
 
@@ -169,7 +181,7 @@ export type CreatePlanMutation = (
   { __typename?: 'Mutation' }
   & { createPlan: (
     { __typename?: 'Plan' }
-    & Pick<Plan, 'plan_id' | 'destination' | 'numberOfDay' | 'plannerId' | 'voteUp' | 'voteDown'>
+    & Pick<Plan, 'id' | 'destination' | 'numberOfDay' | 'plannerId' | 'voteUp' | 'voteDown'>
   ) }
 );
 
@@ -215,6 +227,24 @@ export type RegisterUserMutation = (
   & { registerUser: (
     { __typename?: 'UserResponse' }
     & RegularUserResponseFragment
+  ) }
+);
+
+export type GetAllPlansQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetAllPlansQuery = (
+  { __typename?: 'Query' }
+  & { getAllPlans: (
+    { __typename?: 'PaginatedPlans' }
+    & Pick<PaginatedPlans, 'hasMore'>
+    & { plans: Array<(
+      { __typename?: 'Plan' }
+      & Pick<Plan, 'createdAt' | 'id' | 'destination' | 'numberOfDay'>
+    )> }
   ) }
 );
 
@@ -266,7 +296,7 @@ export function useChangePasswordMutation() {
 export const CreatePlanDocument = gql`
     mutation createPlan($inputPlan: PlanInputType!) {
   createPlan(inputPlan: $inputPlan) {
-    plan_id
+    id
     destination
     numberOfDay
     plannerId
@@ -318,6 +348,23 @@ export const RegisterUserDocument = gql`
 
 export function useRegisterUserMutation() {
   return Urql.useMutation<RegisterUserMutation, RegisterUserMutationVariables>(RegisterUserDocument);
+};
+export const GetAllPlansDocument = gql`
+    query getAllPlans($limit: Int!, $cursor: String) {
+  getAllPlans(limit: $limit, cursor: $cursor) {
+    hasMore
+    plans {
+      createdAt
+      id
+      destination
+      numberOfDay
+    }
+  }
+}
+    `;
+
+export function useGetAllPlansQuery(options: Omit<Urql.UseQueryArgs<GetAllPlansQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetAllPlansQuery>({ query: GetAllPlansDocument, ...options });
 };
 export const LoginMeDocument = gql`
     query loginMe {

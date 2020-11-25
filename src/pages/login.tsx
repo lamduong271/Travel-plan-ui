@@ -9,7 +9,6 @@ import { Box, Button, Link } from '@chakra-ui/core';
 import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../untils/createUrqlClient';
 import NextLink from "next/link";
-import { type } from 'os';
 
 interface loginProps {
 
