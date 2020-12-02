@@ -6,6 +6,11 @@ query getAllPlans($limit: Int!, $cursor:String) {
       id
       destination
       numberOfDay
+      voteUp
+      planner {
+        username
+        id
+      }
     }
   }
 }

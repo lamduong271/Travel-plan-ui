@@ -29,12 +29,10 @@ const cursorPagination = (): Resolver => {
       "getAllPlans"
     );
     info.partial = !isItInTheCache
-    console.log("isItInTheCache ", isItInTheCache)
     let hasMore = true
     fieldInfos.forEach((fieldInfo) => {
       const key = cache.resolveFieldByKey(entityKey, fieldInfo.fieldKey) as string
       const plans = cache.resolve(key, 'plans') as string[]
-      console.log("plans ###", plans)
       const _hasMore = cache.resolve(key, 'hasMore')
       if(!_hasMore) {
         hasMore = _hasMore as boolean
@@ -82,6 +80,14 @@ export const createUrqlClient = (ssrExchange: any) => ({
       },
       updates: {
         Mutation: {
+          // createPlan: (_result, args, cache, info) => {
+          //   const allFields = cache.inspectFields('Query');
+          //   const fieldInfos = allFields.filter((info) => info.fieldName === 'getAllPlans');
+          //   console.log("fieldInfos ", fieldInfos)
+          //   fieldInfos.forEach((fi) => {
+          //     cache.invalidate("Query", "getAllPlans", fi.arguments || {})
+          //   })
+          // },
           logoutUser: (_result, args, cache, info) => {
             // same name with resolver
             betterUpdateQuery<LogoutUserMutation, LoginMeQuery>(

@@ -45,6 +45,7 @@ export type Plan = {
   voteUp: Scalars['Float'];
   voteDown: Scalars['Float'];
   plannerId: Scalars['Float'];
+  planner: User;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -66,6 +67,7 @@ export type Mutation = {
   createPlan: Plan;
   updatePlan?: Maybe<Plan>;
   deletePlan: Scalars['Boolean'];
+  vote: Scalars['Boolean'];
   registerUser: UserResponse;
   login: UserResponse;
   logoutUser: Scalars['Boolean'];
@@ -88,6 +90,12 @@ export type MutationUpdatePlanArgs = {
 
 export type MutationDeletePlanArgs = {
   id: Scalars['Int'];
+};
+
+
+export type MutationVoteArgs = {
+  value: Scalars['Int'];
+  planId: Scalars['Int'];
 };
 
 
@@ -135,6 +143,11 @@ export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
   message: Scalars['String'];
+};
+
+export type Updoot = {
+  __typename?: 'Updoot';
+  voter: User;
 };
 
 export type RegularErrorFragment = (
@@ -243,7 +256,11 @@ export type GetAllPlansQuery = (
     & Pick<PaginatedPlans, 'hasMore'>
     & { plans: Array<(
       { __typename?: 'Plan' }
-      & Pick<Plan, 'createdAt' | 'id' | 'destination' | 'numberOfDay'>
+      & Pick<Plan, 'createdAt' | 'id' | 'destination' | 'numberOfDay' | 'voteUp'>
+      & { planner: (
+        { __typename?: 'User' }
+        & Pick<User, 'username' | 'id'>
+      ) }
     )> }
   ) }
 );
@@ -358,6 +375,11 @@ export const GetAllPlansDocument = gql`
       id
       destination
       numberOfDay
+      voteUp
+      planner {
+        username
+        id
+      }
     }
   }
 }
