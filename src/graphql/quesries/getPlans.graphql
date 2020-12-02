@@ -7,6 +7,7 @@ query getAllPlans($limit: Int!, $cursor:String) {
       destination
       numberOfDay
       voteUp
+      voteStatus
       planner {
         username
         id

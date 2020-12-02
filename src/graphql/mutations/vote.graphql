@@ -1,0 +1,3 @@
+mutation vote($planId: Int!, $value: Int!) {
+  vote(planId: $planId, value: $value)
+}

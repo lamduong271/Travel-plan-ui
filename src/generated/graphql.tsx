@@ -44,6 +44,7 @@ export type Plan = {
   numberOfDay: Scalars['Float'];
   voteUp: Scalars['Float'];
   voteDown: Scalars['Float'];
+  voteStatus?: Maybe<Scalars['Int']>;
   plannerId: Scalars['Float'];
   planner: User;
   createdAt: Scalars['String'];
@@ -243,6 +244,17 @@ export type RegisterUserMutation = (
   ) }
 );
 
+export type VoteMutationVariables = Exact<{
+  planId: Scalars['Int'];
+  value: Scalars['Int'];
+}>;
+
+
+export type VoteMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'vote'>
+);
+
 export type GetAllPlansQueryVariables = Exact<{
   limit: Scalars['Int'];
   cursor?: Maybe<Scalars['String']>;
@@ -256,7 +268,7 @@ export type GetAllPlansQuery = (
     & Pick<PaginatedPlans, 'hasMore'>
     & { plans: Array<(
       { __typename?: 'Plan' }
-      & Pick<Plan, 'createdAt' | 'id' | 'destination' | 'numberOfDay' | 'voteUp'>
+      & Pick<Plan, 'createdAt' | 'id' | 'destination' | 'numberOfDay' | 'voteUp' | 'voteStatus'>
       & { planner: (
         { __typename?: 'User' }
         & Pick<User, 'username' | 'id'>
@@ -366,6 +378,15 @@ export const RegisterUserDocument = gql`
 export function useRegisterUserMutation() {
   return Urql.useMutation<RegisterUserMutation, RegisterUserMutationVariables>(RegisterUserDocument);
 };
+export const VoteDocument = gql`
+    mutation vote($planId: Int!, $value: Int!) {
+  vote(planId: $planId, value: $value)
+}
+    `;
+
+export function useVoteMutation() {
+  return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
+};
 export const GetAllPlansDocument = gql`
     query getAllPlans($limit: Int!, $cursor: String) {
   getAllPlans(limit: $limit, cursor: $cursor) {
@@ -376,6 +397,7 @@ export const GetAllPlansDocument = gql`
       destination
       numberOfDay
       voteUp
+      voteStatus
       planner {
         username
         id
