@@ -8,19 +8,20 @@ import { useRegisterUserMutation } from "../generated/graphql";
 import { toErrorMap } from "../untils/toErrorMap";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../untils/createUrqlClient";
+import { withApollo } from "../untils/withApollo";
 
 interface registerProps {}
 
 
 export const Register: React.FC<registerProps> = ({}) => {
   const router = useRouter()
-  const [, register] = useRegisterUserMutation();
+  const [register] = useRegisterUserMutation();
   return (
     <Wrapper>
       <Formik
         initialValues={{email: "", username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await register({data: values})
+          const response = await register({variables: {data: values}})
           if(response.data?.registerUser.errors) {
             setErrors(toErrorMap(response.data.registerUser.errors))
           } else if(response.data?.registerUser.user) {
@@ -60,4 +61,4 @@ export const Register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Register);
+export default withApollo({ ssr: false })(Register);

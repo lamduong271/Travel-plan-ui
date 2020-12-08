@@ -1,5 +1,3 @@
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../untils/createUrqlClient";
 import NextLink from "next/link";
 import {
   Box,
@@ -9,20 +7,21 @@ import {
   Link,
   Stack
 } from "@chakra-ui/core";
-import { useGetAllPlansQuery } from "../generated/graphql";
-import React, { useState } from "react";
+import { GetAllPlansQuery, useGetAllPlansQuery } from "../generated/graphql";
+import React from "react";
 import { Layout } from "../components/Layout";
 import { UpdootSection } from "../components/UpdootSection";
+import { withApollo } from "../untils/withApollo";
 
 const Index = () => {
-  const [variables, setVariable] = useState({
-    limit: 5,
-    cursor: null as null | string
+  const { data, loading, fetchMore, variables } = useGetAllPlansQuery({ // from apolo client
+    variables: {
+      limit: 5,
+      cursor: null as null | string
+    },
+    notifyOnNetworkStatusChange: true,
   });
-  const [{ data, fetching }] = useGetAllPlansQuery({
-    variables
-  });
-  if (!fetching && !data) {
+  if (!loading && !data) {
     return <div> failed query</div>;
   }
   return (
@@ -33,7 +32,7 @@ const Index = () => {
       </NextLink>
 
       <div>All plans</div>
-      {!data && fetching ? (
+      {!data && loading ? (
         <div>Fetching</div>
       ) : (
         <Stack spacing={8}>
@@ -60,12 +59,28 @@ const Index = () => {
         <Flex>
           <Button
             onClick={() => {
-              setVariable({
-                limit: variables.limit,
-                cursor:
-                  data.getAllPlans.plans[data.getAllPlans.plans.length - 1]
-                    .createdAt
-              });
+              fetchMore({
+                variables: {
+                  limit: variables?.limit,
+                  cursor: data.getAllPlans.plans[data.getAllPlans.plans.length - 1].createdAt
+                },
+                // updateQuery: (previousValue, { fetchMoreResult}): GetAllPlansQuery => {
+                //   if (!fetchMoreResult) {
+                //     return previousValue as GetAllPlansQuery
+                //   }
+                //   return {
+                //     __typename: 'Query',
+                //     getAllPlans: {
+                //       __typename: 'PaginatedPlans',
+                //       hasMore: (fetchMoreResult as GetAllPlansQuery).getAllPlans.hasMore,
+                //       plans: [
+                //         ...(previousValue as GetAllPlansQuery).getAllPlans.plans,
+                //         ...(fetchMoreResult as GetAllPlansQuery).getAllPlans.plans,
+                //       ]
+                //     }
+                //   }
+                // }
+              })
             }}
             m="auto"
             ny={4}
@@ -78,4 +93,4 @@ const Index = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Index);
+export default withApollo({ssr: true})(Index);

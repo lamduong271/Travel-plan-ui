@@ -8,6 +8,7 @@ import { Wrapper } from '../components/Wrapper';
 import { useCreatePlanMutation } from '../generated/graphql';
 import { createUrqlClient } from '../untils/createUrqlClient';
 import { isAuthenticateHandler } from '../untils/isAuthenticateHandler';
+import { withApollo } from '../untils/withApollo';
 
 interface createPlanProps {
 
@@ -16,14 +17,14 @@ interface createPlanProps {
 const CreatePlan: React.FC<createPlanProps> = ({}) => {
   const router = useRouter();
   isAuthenticateHandler()
-  const [, createPlan] = useCreatePlanMutation()
+  const [createPlan] = useCreatePlanMutation()
     return (
       <Wrapper variant='small'>
       <Formik
         initialValues={{ destination: "", numberOfDay: 0 }}
         onSubmit={async (values) => {
-          const {error} = await createPlan({inputPlan: values})
-           if(!error) {
+          const { errors } = await createPlan({variables: {inputPlan: values}})
+           if(!errors) {
             router.push('/')
           }
         }}
@@ -55,4 +56,4 @@ const CreatePlan: React.FC<createPlanProps> = ({}) => {
       </Wrapper>
     );
 }
-export default withUrqlClient(createUrqlClient)(CreatePlan)
+export default withApollo({ ssr: false })(CreatePlan)

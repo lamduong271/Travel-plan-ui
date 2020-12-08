@@ -7,13 +7,13 @@ import { InputField } from "../../components/InputField";
 import { Wrapper } from "../../components/Wrapper";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { toErrorMap } from "../../untils/toErrorMap";
-import { PartialNextContext, withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../../untils/createUrqlClient";
+import { PartialNextContext } from "next-urql";
 import NextLink from "next/link";
+import { withApollo } from "../../untils/withApollo";
 
 const ChangePassword: NextComponentType<PartialNextContext, {}, {}> = () => {
   const router = useRouter();
-  const [, changePassword] = useChangePasswordMutation();
+  const [changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState("");
   return (
     <Wrapper variant="small">
@@ -21,8 +21,11 @@ const ChangePassword: NextComponentType<PartialNextContext, {}, {}> = () => {
         initialValues={{ newPassword: "" }}
         onSubmit={async (values, { setErrors }) => {
           const response = await changePassword({
-            newPassword: values.newPassword,
-            token: typeof router.query.token === 'string' ? router.query.token : ''
+            variables: {
+              newPassword: values.newPassword,
+              token:
+                typeof router.query.token === "string" ? router.query.token : ""
+            }
           });
           if (response.data?.changePassword.errors) {
             const errorMap = toErrorMap(response.data.changePassword.errors);
@@ -63,4 +66,4 @@ const ChangePassword: NextComponentType<PartialNextContext, {}, {}> = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(ChangePassword);
+export default withApollo({ ssr: false })(ChangePassword);

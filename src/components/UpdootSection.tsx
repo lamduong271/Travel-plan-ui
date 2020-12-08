@@ -8,14 +8,16 @@ interface UpdootSectionProps {
 }
 
 export const UpdootSection: React.FC<UpdootSectionProps> = ({plan}) => {
-    const [,vote] = useVoteMutation()
+    const [ vote] = useVoteMutation()
     return (
       <Flex direction="column" justifyContent="center" alignItems="center" mr={4}>
         <IconButton
           aria-label="updoot plan"
           onClick={() => vote({
-            planId: plan.id,
-            value: 1,
+            variables: {
+              planId: plan.id,
+              value: 1,
+            }
           })}
           icon={<ChevronUpIcon />}
         />
@@ -23,8 +25,10 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({plan}) => {
         <IconButton
           aria-label="downdoot plan"
           onClick={() => vote({
-            planId: plan.id,
-            value: -1,
+            variables: {
+              planId: plan.id,
+              value: -1,
+            }
           })}
           name="chevron-down"
           icon={<ChevronDownIcon />}

@@ -4,10 +4,10 @@ import { useLoginMeQuery } from "../generated/graphql";
 
 export const isAuthenticateHandler = () => {
   const router = useRouter();
-  const [{data, fetching}] = useLoginMeQuery()
+  const {data, loading} = useLoginMeQuery()
   useEffect(() => {
-    if(!fetching && !data?.loginMe) {
+    if(!loading && !data?.loginMe) {
       router.replace('/login?next=' + router.pathname) //redirect to login page when no user found or loading, and tell after login where to go
     }
-  },[fetching, data, router])
+  },[loading, data, router])
 }

@@ -6,9 +6,8 @@ import { Formik, Form } from 'formik';
 import { toErrorMap } from '../untils/toErrorMap';
 import { InputField } from '../components/InputField';
 import { Box, Button, Link } from '@chakra-ui/core';
-import { withUrqlClient } from 'next-urql';
-import { createUrqlClient } from '../untils/createUrqlClient';
 import NextLink from "next/link";
+import { withApollo } from '../untils/withApollo';
 
 interface loginProps {
 
@@ -16,13 +15,13 @@ interface loginProps {
 
 export const Login: React.FC<loginProps> = ({}) => {
   const router = useRouter()
-  const [, login] = useLoginMutation();
+  const [login] = useLoginMutation();
   return (
     <Wrapper>
       <Formik
         initialValues={{ usernameOrEmail: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await login(values)
+          const response = await login({variables: values})
           if(response.data?.login.errors) {
             setErrors(toErrorMap(response.data.login.errors))
           } else if(response.data?.login.user) {
@@ -67,4 +66,4 @@ export const Login: React.FC<loginProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Login);
+export default withApollo({ ssr: false })(Login);
